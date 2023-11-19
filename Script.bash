@@ -22,3 +22,6 @@ for i in $root/fastq/BS*1.fastq.gz; do
     gunzip -c name1.fastq.gz  > fastqtmp
 
 
+if [[ $filepath =~ BS([[:digit:]]+)_(.+)\.fastq\.gz ]]; then
+    bs_number="${BASH_REMATCH[1]}"
+    before_underscore="${BASH_REMATCH[2]%%_*}"
