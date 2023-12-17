@@ -1,12 +1,12 @@
-################################################################################
-# Script: table_extraction.py
+###############################################################################
+# Script: fulltable.py
 # Author: Kenneth Valerio Aguilar
 # Date: 11/27/2023
 # Version: 1.0
-# Purpose: Create analysis table from HLA genotyping data
+# Purpose: Create analysis table from HLA genotyping data with all the data
 # Input Requirements: Requires results.txt files with genotyping data
-# Usage: run the script
-# Output: summary .csv table
+# Usage: run the script like: python3 fulltable.py
+# Output: summary .tsv table
 ################################################################################
 
 # import the required libraries
@@ -18,7 +18,7 @@ import re
 root_dir = "/molbio/projects/hla_genotyping/hlahd/CD_analysis"
 
 # initialize an empty DataFrame
-Final_table = pd.DataFrame(columns=['Basename', 'DQA1_Gtype1', 'DQA1_Gtype2', 'DQB1_Gtype1','DQB1_Gtype2'])
+Final_table = pd.DataFrame()
 
 # iterate over subdirectories in CD_analysis
 for subdir in os.listdir(root_dir):
@@ -42,8 +42,7 @@ for subdir in os.listdir(root_dir):
 
                 #extract information and append to the Final_table dataframe
                 data = pd.read_csv(file_path,sep='\t',header=None,names=['Region','Gtype1','Gtype2'])
-                data2=data.iloc[4:6]
-                data2['Basename']= file_name.split('_')[0]
+                data['Basename']= file_name.split('_')[0]
 
                 #create new one row dataframe
                 new_data = {'Basename': data2['Basename'].iloc[0]}
@@ -61,4 +60,8 @@ for subdir in os.listdir(root_dir):
     else:
         continue
 #Export the final table
-Final_table.to_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/summary_table.csv', index=False)
+Final_table.to_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/summary_table.csv', sep='\t', index=False)
+                                                                                                                   64,1          Bot
+
+                                                                                                                   57,1          75%
+
