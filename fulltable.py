@@ -61,7 +61,5 @@ for subdir in os.listdir(root_dir):
         continue
 #Export the final table
 Final_table.to_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/summary_table.csv', sep='\t', index=False)
-                                                                                                                   64,1          Bot
 
-                                                                                                                   57,1          75%
 
