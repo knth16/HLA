@@ -13,9 +13,10 @@
 import pandas as pd
 import os
 import re
+import numpy as np
 
 #read in data
-serotypes = pd.read_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/serotype_table.tsv' sep='\t')
+serotypes = pd.read_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/serotype_table.tsv', sep='\t')
 data = pd.read_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/summary_table.csv',sep=',')
 
 #create empty lists to fill with for loop
@@ -89,7 +90,32 @@ result_df['program_Coding'] = result_df.apply(apply_korponay_coding, axis=1)
 result_df['program_Coding'] = result_df['program_Coding'].apply(lambda x: x + 'X' if len(x) == 1 else x)
 
 
+#add data of serotypes determined in the lab
+Lab_serotypes = {'CS01':'3X','CS11':'1X', 'CS12':'3X','CS13':'1X',\
+                'CS21':'XX', 'CS22':'1X','CS23':'1X','CS24':'1X',\
+                'CS25':'1X','CS32':'1X','CS41':'38','CS51':'12',\
+                'CS52':'13','CS53':'12','CS54':'12','CS55':'11',\
+                'CS56':'23','CS57':'11','CS61':'3X','CS62':'8X',\
+                    'CS63':'8X', 'BS051':'13','BS052':'2X','BS053':'12',\
+                        'BS054':'1X','BS055':'23','BS056':'23','BS061':'3X',\
+                            'BS062':'1X','BS063':'1X','BS064':'1X','BS065':'1X',\
+                                'BS066':'1X','BS067':'1X','BS068':'3X','BS069':'3X',\
+                                    'BS0691':'XX','BS070':'12','BS071':'1X','BS073':'13',\
+                                        'BS074':'13','BS075':'13','BS081':'13','BS091':'12',\
+                                            'BS092':'18','BS093':'12','BS094':'11','BS095':'11',\
+                                                'BS096':'12','BS097':'11','BS098':'28','BS099':'12',\
+                                                    'BS100':'28','BS101':'12','BS102':'12','BS103':'11',\
+                                                        'BS104':'28','BS105':'18'}
+
+
+#create new column to compare the Lab_serotypes with the program_serotypes
+result_df['Lab_serotypes'] = result_df['Basename'].map(Lab_serotypes)
+
+#create comparison column
+result_df['New_Column'] = np.where(result_df['program_Coding'] == result_df['Lab_serotypes'], 'Yes', 'No')
+
+#combine the table with the 
+result_df = pd.merge(data, result_df, how = 'left', on= 'Basename')
+
 # export result
 result_df.to_csv('/molbio/projects/hla_genotyping/hlahd/CD_analysis/matching_table.csv', sep='\t', index=False)
-
-
